@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF‑8">
+<title>Tiro al pato multiplayer</title>
+<style>
+	body { 
+	margin:0; 
+	overflow:hidden; 
+	}
+	#game {
+	position: relative;
+	width: 100vw; 
+	height: 100vh;
+	background: url('fondo.jpg') no-repeat center center / cover;
+	}
+	.pato {
+	position: absolute;		
+	width: 100px; height: 80px;
+	cursor: pointer;
+	transition: transform 0.1s;
+	}
+	.pato:active {
+	transform: scale(0.8);
+	}
+	#pistola {
+	position: absolute;
+	bottom: 0px;
+	left: calc(50% - 1000px);
+	width: 600px;
+	}
+	#preguntaBox {	
+	position: absolute;
+	top: 20px;
+	left:50%;
+	transform: translateX(-50%);
+	padding:10px 20px; 
+	background: rgba(255,255,255,0.8);
+	font-size: 1.2em;
+	border-radius: 8px;
+	}
+</style>
+</head>
+<body>
+<div id="game">
+<div id="preguntaBox">Esperando conexión...</div>
+<img id="pistola" src="pistola.png" alt="Pistola">
+</div>
+<script>
+const preguntas = [
+	{ texto: "¿Como se inicia la programacion en HTML?", opciones: ["<Script>","<Body>","<Head>","<HTML>"], correcta: 3 },
+	{ texto: "¿Cual es la etiqueta de abre y cierre de una pagina HTML?", opciones: ["<Style> </Style>","<HTML> y </HTML>","<> y <a>","<> y </>"], correcta: 1 },
+	{ texto: "¿Cuál es la etiqueta para crear un enlace?", opciones: ["<a>", "<link>", "<href>", "<url>"], correcta: 0 },
+	{ texto: "¿Qué etiqueta se usa para insertar una imagen?", opciones: ["<src>", "<img>", "<image>", "<picture>"], correcta: 1 },
+	{ texto: "¿Qué propiedad de CSS cambia el color del texto?", opciones: ["background-color", "text-color", "font-color", "color"], correcta: 3 },
+	{ texto: "¿Cómo se escribe un comentario en HTML?", opciones: ["/* comentario */", "// comentario", "<!-- comentario -->", "# comentario"], correcta: 2 },
+	{ texto: "¿Cuál es la etiqueta para crear un párrafo?", opciones: ["<text>", "<p>", "<para>", "<paragraph>"], correcta: 1 },
+	{ texto: "¿Qué propiedad de CSS se utiliza para centrar texto?", opciones: ["text-align", "align", "center", "font-align"], correcta: 0 },
+	{ texto: "¿Cuál es el tipo de archivo de una hoja de estilos?", opciones: [".html", ".css", ".js", ".txt"], correcta: 1 },	
+	{ texto: "¿Qué etiqueta se usa para agregar CSS en línea?", opciones: ["<style>", "<css>", "style=''", "<link>"], correcta: 2 },
+	{ texto: "¿Cuál es la forma correcta de enlazar un archivo CSS externo?", opciones: ["<script src='estilo.css'>", "<css href='estilo.css'>", "<link rel='stylesheet' href='estilo.css'>", "<style src='estilo.css'>"], correcta: 2 },
+	{ texto: "¿Cómo se declara una variable en JavaScript?", opciones: ["var x;", "int x;", "x := 0;", "let x = 0"], correcta: 3 },
+ 	{ texto: "¿Qué evento se usa para ejecutar código al hacer clic?", opciones: ["onhover", "onload", "onclick", "onpress"], correcta: 2 },
+	{ texto: "¿Cuál es el símbolo para concatenar cadenas en JavaScript?", opciones: ["&", "+", ".", ","], correcta: 1 },
+	{ texto: "¿Qué etiqueta se usa para insertar JavaScript en HTML?", opciones: ["<js>", "<javascript>", "<code>", "<script>"], correcta: 3 },
+	{ texto: "¿Cómo se escribe un comentario en JavaScript?", opciones: ["<!-- comentario -->", "// comentario", "# comentario", "** comentario **"], correcta: 1 },
+	{ texto: "¿Qué propiedad de CSS cambia el tamaño del texto?", opciones: ["font-style", "font-size", "text-size", "text-height"], correcta: 1 },
+	{ texto: "¿Qué método se usa para mostrar una alerta en JavaScript?", opciones: ["alert()", "message()", "popup()", "display()"], correcta: 0 },
+	{ texto: "¿Cómo se accede a un elemento por su ID en JavaScript?", opciones: ["getElement(id)", "document.getID()", "document.getElementById()", "getById()"], correcta: 2 },
+	{ texto: "¿Cuál es la forma correcta de aplicar estilo desde HTML a un elemento?", opciones: ["<div css='color:red'>", "<div style='color:red'>", "<div font='red'>", "<div class='color:red'>"], correcta: 1 }  
+];
+const patoImg = "https://cdn-icons-png.freepik.com/512/14041/14041146.png";
+const fondoImg = "https://static.vecteezy.com/system/resources/previews/024/243/914/non_2x/circus-cartoon-stage-with-ring-background-free-vector.jpg";
+const pistolaImg = "https://i.imgur.com/l7KY59v.png";
+	let role = null; // "comandante" o "jugador"https://img.itch.zone/aW1nLzE4OTA5MzEzLnBuZw==/315x250%23c/rxdJPN.png
+	let myPlayerIndex = null;
+	let currentQuestion = 0;
+
+const ws = new WebSocket("wss://TU_SERVIDOR_WS");
+ws.onopen = () => console.log("Conectado al servidor WS");
+ws.onmessage = msg => {
+const data = JSON.parse(msg.data);
+	if (data.type === "role") {
+	role = data.role; // "comandante" o "jugador1" / "jugador2"
+	if (role === "comandante") {
+	document.getElementById("preguntaBox").innerText = "Esperando jugadores...";
+}
+}
+if (data.type === "start") {
+if (role.startsWith("jugador")) {
+myPlayerIndex = role === "jugador1" ? 1 : 2;
+}
+	showQuestion(data.questionIndex);
+	}	
+	if (data.type === "shotResult") {
+	if (role.startsWith("jugador")) {
+	if (data.correct) {
+	alert("¡Correcto!");
+} else {
+	alert("Fallaste...");
+}
+}
+	if (data.next !== undefined) {
+	currentQuestion = data.next;
+	showQuestion(currentQuestion);
+}
+}
+};
+	function maybeStartGame() {
+	if (role === "comandante") {
+	ws.send(JSON.stringify({ type: "ready" }));
+	}}
+function showQuestion(qIdx) {
+	currentQuestion = qIdx;
+	const q = preguntas[qIdx];
+	const box = document.getElementById("preguntaBox");
+	box.innerText = q.texto;
+	clearPatos();
+	const game = document.getElementById("game");	
+	q.opciones.forEach((opt, i) => {
+	const pato = document.createElement("img");
+	pato.src = patoImg;
+	pato.className = "pato";
+	pato.style.left = (10 + Math.random()* (window.innerWidth-150)) + "px";
+	pato.style.top = (150 + Math.random()* (window.innerHeight-300)) + "px";
+	pato.dataset.index = i;
+	pato.dataset.text = opt;
+	pato.title = opt;
+	pato.onclick = () => shootPato(pato);
+	game.appendChild(pato);
+});
+}
+function clearPatos() {
+document.querySelectorAll(".pato").forEach(e=>e.remove());
+}
+function shootPato(patoEl) {
+const pistola = document.getElementById("pistola");
+pistola.style.transition = "transform 0.2s";
+pistola.style.transform = "translateY(-20px) rotate(-5deg)";
+setTimeout(() => {
+pistola.style.transform = "";
+}, 200);
+	ws.send(JSON.stringify({
+	type: "shot",
+	player: myPlayerIndex,
+	choice: Number(patoEl.dataset.index),	
+	question: currentQuestion
+}));}
+ws.onopen = () => setTimeout(maybeStartGame, 500);
+document.getElementById("game").style.backgroundImage = `url(${fondoImg})`;
+document.getElementById("pistola").src = pistolaImg;
+</script>
+</body>
+</html>
