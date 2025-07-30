@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulación de Circuito Arduino con LEDs</title>
+  <style>
+    body {
+      background-color: #2c3e50;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .board {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .led {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin: 10px;
+      background-color: #7f8c8d;
+      box-shadow: 0 0 10px #34495e;
+      transition: background-color 0.3s;
+    }
+    .led.on {
+      background-color: #e74c3c;
+      box-shadow: 0 0 20px #e74c3c;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    .button:hover {
+      background-color: #3498db;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Simulación de Circuito Arduino con LEDs</h1>
+  <p>Haz clic en la batería para iniciar la simulación</p>
+
+  <button class="button" onclick="togglePower()">🔋 Conectar batería</button>
+
+  <div class="board">
+    <div class="led" id="led1"></div>
+    <div class="led" id="led2"></div>
+    <div class="led" id="led3"></div>
+    <div class="led" id="led4"></div>
+    <div class="led" id="led5"></div>
+  </div>
+
+  <script>
+    let isOn = false;
+    let interval;
+
+    function togglePower() {
+      if (!isOn) {
+        isOn = true;
+        interval = setInterval(() => {
+          document.getElementById('
+::contentReference[oaicite:73]{index=73}
