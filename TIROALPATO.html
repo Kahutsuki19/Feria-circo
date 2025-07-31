@@ -76,7 +76,7 @@ const pistolaImg = "https://i.imgur.com/l7KY59v.png";
 	let myPlayerIndex = null;
 	let currentQuestion = 0;
 
-const ws = new WebSocket("wss://tiro-al-pato-server.jessica.repl.co");
+const ws = new WebSocket("wss://tiro-al-pato-ws.jessicamunoz.repl.co");
 ws.onopen = () => console.log("Conectado al servidor WS");
 ws.onmessage = msg => {
 const data = JSON.parse(msg.data);
