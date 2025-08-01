@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<title>Esquiva Extrema</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Smooch+Sans:wght@100..900&display=swap" rel="stylesheet">
+	<style>
+		body {
+		margin: 0;
+		background: #111;
+		overflow: hidden;
+		font-family: sans-serif;
+		color: white;
+		font-family: Smooch Sans;
+		font-size: 25px;
+		}
+		#game {
+		position: relative;
+		width: 100vw;
+		height: 100vh;
+		background: radial-gradient(circle at center, #51353a, #38212a);
+		}
+		#player {
+		position: absolute;
+		width: 50px;
+		height: 50px;
+		}
+		#player img {
+		width: 100%;
+		height: 100%;
+		}
+		.enemy, .shield {
+		position: absolute;
+		width: 40px;
+		height: 40px;
+		}
+		.enemy img, .shield img {
+		width: 100%;
+		height: 100%;
+		}
+		#hud {
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		font-size: 1.2em;
+		z-index: 10;
+		}
+		#gameOver {
+		position: absolute;
+		top: 40%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-size: 2em;
+		background: rgba(0,0,0,0.8);
+		padding: 20px;
+		display: none;
+		}
+		#startScreen {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background: rgba(0,0,0,0.9);
+		color: white;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		z-index: 20;
+		}
+		#startScreen button {
+		margin-top: 40px;
+		padding: 15px 30px;
+		font-size: 2em;
+		background: #ff7043;
+		color: white;
+		border: none;
+		border-radius: 30px;
+		cursor: pointer;
+		transition: background 0.3s, transform 0.3s;
+		}
+		#startScreen button:hover {
+		background: #ff5722;
+		transform: translateY(-5px);
+		}
+	</style>
+</head>
+<body>
+	<div id="game">
+	<div id="player"><img src="https://media.tenor.com/ORwVOmkKdYEAAAAj/pato-caminando.gif" alt="player"></div>
+	<div id="hud">❤️ Vidas: <span id="vidas">3</span> | ⭐ Puntos: <span id="puntos">0</span></div>
+	<div id="gameOver">¡Game Over!<br><span id="finalScore"></span></div>
+	</div>
+	<div id="startScreen">
+	<h1 style="margin-top: 100px;">Esquiva Extrema</h1>
+	<p>Usa las teclas de flechas para mover al pato.</p>
+	<p>🚫 Evita las cañas de pescar.<br>💰 Recoge las bolsas para ganar puntos y vidas.</p>
+	<p> En este juego tendras que esquivar cañas de pescar que vienen hacia ti como un pato</p>
+	<p> Sobrevive y gana puntos; si llegas a mas de 6000 puntos te espera un premio, suerte!!</p>
+	<button onclick="startGame()">¡Comenzar!</button>
+	</div>
+	<script>
+	const game = document.getElementById('game')
+	const player = document.getElementById('player')
+	const vidasEl = document.getElementById('vidas')
+	const puntosEl = document.getElementById('puntos')
+	const gameOverEl = document.getElementById('gameOver')
+	const finalScoreEl = document.getElementById('finalScore')
+	let vidas = 3
+	let puntos = 0
+	let velocidadEnemigos = 3
+	let tiempo = 0
+	let canSpawnShield = true
+	let playerX = 100
+	let playerY = 200
+	let keys = {}
+	let gameLoop
+	let enemySpawner
+	let shieldSpawner
+	let difficultyLoop
+	let enemySpawnInterval = 900
+	document.addEventListener('keydown', e => keys[e.key] = true)
+	document.addEventListener('keyup', e => keys[e.key] = false)
+	function movePlayer() {
+		const speed = 5
+		if (keys['ArrowUp']) playerY -= speed
+		if (keys['ArrowDown']) playerY += speed
+		if (keys['ArrowLeft']) playerX -= speed
+		if (keys['ArrowRight']) playerX += speed
+		playerY = Math.max(0, Math.min(game.clientHeight - player.offsetHeight, playerY))
+		playerX = Math.max(0, Math.min(game.clientWidth - player.offsetWidth, playerX))
+		player.style.top = playerY + 'px'
+		player.style.left = playerX + 'px'}
+	function createEnemy() {
+		const enemy = document.createElement('div')
+		enemy.className = 'enemy'
+		enemy.style.top = Math.random() * (game.clientHeight - 40) + 'px'
+		enemy.style.left = game.clientWidth + 'px'
+		enemy.innerHTML = `<img src="https://mundonauticouruguay.com/wp-content/uploads/2024/08/28-PULGADAS-FIBRA-DE-VIDRIO.png">`
+		game.appendChild(enemy)
+		let interval = setInterval(() => {
+			let left = enemy.offsetLeft - velocidadEnemigos
+			if (left < -40) {
+			clearInterval(interval)
+			enemy.remove()
+			puntos += 10
+			puntosEl.innerText = puntos
+			return
+			}
+			enemy.style.left = left + 'px'
+			if (isColliding(player, enemy)) {
+			clearInterval(interval)
+			enemy.remove()
+			vidas--
+			vidasEl.innerText = vidas
+			if (vidas <= 0) endGame()
+			}}, 20)}
+	function createShield() {
+		if (!canSpawnShield) return
+		canSpawnShield = false
+		const shield = document.createElement('div')
+		shield.className = 'shield'
+		shield.style.top = Math.random() * (game.clientHeight - 40) + 'px'
+		shield.style.left = Math.random() * (game.clientWidth - 100) + 50 + 'px'
+		shield.innerHTML = `<img src="https://cdn.creazilla.com/emojis/56710/money-bag-emoji-clipart-md.png">`
+		game.appendChild(shield)
+		let duration = 0
+		const shieldLifeInterval = setInterval(() => {
+			duration++
+			if (duration > 300) {
+			clearInterval(shieldLifeInterval)
+			shield.remove()
+			canSpawnShield = true
+			return
+			}
+			if (isColliding(player, shield)) {
+			clearInterval(shieldLifeInterval)
+			shield.remove()
+			canSpawnShield = true
+			vidas++
+			puntos += 50
+			vidasEl.innerText = vidas
+			puntosEl.innerText = puntos
+		}
+	}, 50)}
+	function isColliding(a, b) {
+		const rect1 = a.getBoundingClientRect()
+		const rect2 = b.getBoundingClientRect()
+		return !(
+			rect1.top > rect2.bottom ||
+			rect1.bottom < rect2.top ||
+			rect1.right < rect2.left ||
+			rect1.left > rect2.right
+		)}
+	function endGame() {
+		clearInterval(gameLoop)
+		clearInterval(enemySpawner)
+		clearInterval(shieldSpawner)
+		clearInterval(difficultyLoop)
+		gameOverEl.style.display = 'block'
+		finalScoreEl.innerText = `⭐ Puntos finales: ${puntos}`
+	}
+	document.getElementById('startScreen').style.display = 'block'
+	function startGame() {
+		document.getElementById('startScreen').style.display = 'none'
+		gameLoop = setInterval(() => {
+			movePlayer()
+		}, 20)
+		enemySpawner = setInterval(createEnemy, enemySpawnInterval)
+		shieldSpawner = setInterval(() => {
+			if (Math.random() < 0.1 && canSpawnShield) {
+			createShield()
+			}
+		}, 2000)
+		difficultyLoop = setInterval(() => {
+			tiempo++
+			if (tiempo % 5 === 0 && velocidadEnemigos < 20) {
+			velocidadEnemigos += 0.5
+			}
+			if (tiempo % 10 === 0 && enemySpawnInterval > 200) {
+			clearInterval(enemySpawner)
+			enemySpawnInterval -= 100
+			enemySpawner = setInterval(createEnemy, enemySpawnInterval)
+			}
+		}, 1000)
+	}
+	</script>
+</body>
+</html>
