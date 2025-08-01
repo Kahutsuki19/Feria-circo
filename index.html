@@ -1,71 +1,279 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Simulación de Circuito Arduino con LEDs</title>
-  <style>
-    body {
-      background-color: #2c3e50;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    .board {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .led {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin: 10px;
-      background-color: #7f8c8d;
-      box-shadow: 0 0 10px #34495e;
-      transition: background-color 0.3s;
-    }
-    .led.on {
-      background-color: #e74c3c;
-      box-shadow: 0 0 20px #e74c3c;
-    }
-    .button {
-      padding: 10px 20px;
-      background-color: #2980b9;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-    .button:hover {
-      background-color: #3498db;
-    }
-  </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Smooch+Sans:wght@100..900&display=swap" rel="stylesheet">
+<style>	
+	body{ 	
+	font-family: Smooch Sans;
+	overflow-x: hidden;
+	margin: 0;
+	text-align: center;
+	background: linear-gradient(to bottom, #6a4a4a, #6a4a4a, #6a4a4a, #6a4a4a, #38212a, #38212a);
+    	flex-direction: column;
+	color: white;
+	}
+	.mi-imagen {
+	display: block;
+	width: 1500px;
+	height: auto;
+	cursor: pointer;
+	background: radial-gradient(circle at center, white, blue);
+	margin-top: -200px;
+	margin-left: -100px;
+	z-index: -1;
+	}
+    	header .container {
+    	max-width: 1200px;
+    	margin: auto;
+    	padding: 0 20px;
+    	display: flex;
+    	justify-content: space-between;
+    	align-items: center;
+	z-index: 1000;
+    	}
+    	header nav{
+    	display: flex;
+    	}
+    	header nav h1{
+    	margin-left: 20px;
+    	transition: color 0.75s ease;
+    	cursor: pointer;
+    	}
+    	header nav h1:hover{
+    	color: white;
+    	}
+	.encima{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+	padding: 20px;
+	}
+	.CIRCUS{
+	font-size: 100px;
+	margin-top: 170px;
+	color: white;
+	text-shadow:
+	-1px -1px 0 black,
+	1px -1px 0 black,
+	-1px  1px 0 black,
+	1px  1px 0 black;
+	}
+	.autores {
+	padding: 50px 20px;
+	text-align: center;
+	}
+	.autores h2{
+	color: #333;
+	margin-bottom: 40px;
+	}
+	.tarjetas {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 20px;
+	justify-content: center;
+	margin-top: 30px;
+	}
+	.tarjeta {
+	color: white;
+	width: 280px;
+	padding: 20px;
+	border-radius: 10px;
+	transition: transform 0.3s ease;
+	position: relative;
+	overflow: hidden;
+	}
+	.tarjeta:hover {
+	transform: scale(1.05);
+	}
+	.tarjeta img {
+	width: 180px;
+	height: 180px;
+	object-fit: cover;
+	border-radius: 50%;
+	display: block;
+	margin: 0 auto;
+	border; 4px solid white;
+	box-shadow: 0 0 10px rgba(0,0,0,0.3);
+	}
+	.tarjeta .imagen-contenedor {
+	position: relative;
+	border-radius: 10px;
+	overflow: hidden;
+	}
+	.tarjeta .imagen-contenedor::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-image: url('');
+	background-size: cover;
+	background-position: center; 
+	transition: opacity 0.3s ease;
+	z-index: 2;
+	}
+	.tarjeta:hover .imagen-contenedor::before {
+	opacity: 0;
+	}
+	.tarjeta p {
+	font-size: 24px;
+	margin-top: 15px;
+	background-color: rgba(255, 255, 255, 0.2);
+	padding: 5px 10px;
+	border-radius: 8px;
+	}
+	.JUEGOS{
+	display: flex;
+	height: 500px;
+	font-size: 25px;
+	margin-left: 50px;
+	}
+	.rueda{
+	display: absolute;
+	padding: 50px;
+	height: 100px;
+	}
+	.descripcion{
+	width: 800px;
+	}
+	.casino{
+	width: 600px;
+	}
+</style>
+<img src="
+https://freight.cargo.site/w/800/i/a7382f7a71b468cfd99a91a14d387dfc74e5b759305309bbbdb0d70e692ee5cd/animacion-feria2.gif
+" alt="IMAGENENNENENEN" class="mi-imagen">
+<header class="encima" style="background-color: transparent;">
+<div class="container">  
+<a href="https://liceocanadiense.mayavirtual.net/my/"><img src="https://liceocanadiense.mayavirtual.net/pluginfile.php/1/theme_space/favicon/1747946624/nuevo_ico_lc.ico" alt=" 4to baco " width="70px" height="50px"></img></a>
+<div style="border-radius: 8px; padding: 10px; ">
+<nav>
+	<h1 onclick="mostrarMensaje(event, 'menu')" style="cursor:pointer;">
+	M E N U 
+	</h1>                
+	<h1 onclick="mostrarMensaje(event, 'populares')" style="cursor:pointer;">
+	P O P U L A R E S  
+	</h1>
+</nav>
+</div>
+</div>
+<div id="menuFlotante" style="display: none; position: absolute; z-index: 999; background-color: rgba(255, 239, 204, 0.3); border-radius: 8px; padding: 15px; font-family: 'Cinzel', serif; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
+<div id="populares" style="border-radius: 8px; display: none; padding: 10px; background-color: transparent;">
+<a href="https://kahutsuki19.github.io/Feria-circo/TIROALPATO" style="font-family: Smooch Sans; font-size: 25px; color: #424136; text-decoration: none; display:block;">
+Tiro al pato
+</a>
+<a href="https://kahutsuki19.github.io/Feria-circo/ESQUIV" style="font-family: Smooch Sans; font-size: 25px; color: #424136; text-decoration: none; display:block;">
+Esquiva Extrema
+</a>
+<a href="https://kahutsuki19.github.io/Feria-circo/RELLENAELAGUA" style="font-family: Smooch Sans; font-size: 25px; color: #424136; text-decoration: none; display:block;">
+Puzzle de agua
+</a>
+</div>
+<div id="menu">
+<a href="https://kahutsuki19.git hub.io/Feria-circo/" style="font-family: Smooch Sans; font-size: 25px; color: #424136; text-decoration: none; display:block;">
+menu
+</a>
+</div>
+</div>
+<section class="CIRCUS">
+<h2> C I R C U S</h2>
+</section>
+</header>
 </head>
 <body>
+<section id="autores" class="autores" style="padding: 70px; margin-top: -250px;">
+<div class="tarjetas">
+<div class="tarjeta">
+<a href="https://kahutsuki19.github.io/Feria-circo/RELLENAELAGUA" style="font-family: Smooch Sans; font-size: 30px; color: white; text-decoration: none; display:block;"> 
+<div class="imagen-contenedor">
+<img src="https://www.coolmathgames.com/sites/default/files/2022-09/Color%20Sorting%20Game%20Lipuzz%20Water%20Sort%20Gameplay.gif"></img>
+</div>
+<p>Puzzle de agua </a></p>	
+</div>
+<div class="tarjeta">
+<a href="https://kahutsuki19.github.io/Feria-circo/ESQUIV" style="font-family: Smooch Sans; font-size: 30px; color: white; text-decoration: none; display:block;">
+<div class="imagen-contenedor">
+<img src="https://i.gifer.com/origin/f5/f5baef4b6b6677020ab8d091ef78a3bc_w200.gif">
+</img>
+</div>
+<p> Esquiva!! </a></p>
+</div>
+<div class="tarjeta">
+<a href="https://kahutsuki19.github.io/Feria-circo/TIROALPATO" style="font-family: Smooch Sans; font-size: 30px; color: white; text-decoration: none; display:block;">
+<div class="imagen-contenedor">
+<img src="https://lh6.ggpht.com/_SdN1l4rFz9I/SWpGn9GUmdI/AAAAAAAAAqM/8VSD6YBy2Po/w1200-h630-p-k-no-nu/tiro%20al%20pato.jpg">
+</img>
+</div>
+<p> Tiro al Pato </a></p>
+</div>
+</div>
+</section>
+</section>
+<section class="JUEGOS" style="margin-bottom: 200px;">
+<section class="descripcion">
+<p style="font-size: 40px;"> Carnival </p>
+<p> Un lugar donde <strong>jugar</strong> es solo el comienzo...</p>
+<p> Este es un espacio creado especialmente para ti, donde la diversión se une con el conocimiento.
+	Aquí no solo podrás disfrutar de juegos emocionantes y coloridos, sino que también descubrirás el fascinante mundo de la <strong>programación</strong> de una forma práctica, interactiva y creativa. Cada juego que encuentres ha sido pensado para ayudarte a aprender conceptos esenciales de código mientras te diviertes, sin darte cuenta estarás desarrollando habilidades que te servirán para toda la vida.</p>
+<p>Prepárate para una aventura llena de desafíos, colores, lógica, imaginación y aprendizaje. ¡Tu viaje como programador/a comienza jugando!</p>
+</section>
+<section class="rueda">
+<img src="
+https://media.baamboozle.com/uploads/images/544136/1649834141_60623_gif-url.gif
+"></img>
+</section>
+</section>
+<section class="autores" style="padding: 70px; margin-top: -250px;">
+<div class="tarjetas">
 
-  <h1>Simulación de Circuito Arduino con LEDs</h1>
-  <p>Haz clic en la batería para iniciar la simulación</p>
-
-  <button class="button" onclick="togglePower()">🔋 Conectar batería</button>
-
-  <div class="board">
-    <div class="led" id="led1"></div>
-    <div class="led" id="led2"></div>
-    <div class="led" id="led3"></div>
-    <div class="led" id="led4"></div>
-    <div class="led" id="led5"></div>
-  </div>
-
-  <script>
-    let isOn = false;
-    let interval;
-
-    function togglePower() {
-      if (!isOn) {
-        isOn = true;
-        interval = setInterval(() => {
-          document.getElementById('
-::contentReference[oaicite:73]{index=73}
+<div class="tarjeta">
+<div class="imagen-contenedor">
+<img src="https://i.pinimg.com/originals/49/d4/c4/49d4c4a80eb2845798a84c4dc515b474.gif">
+</img>
+</div>
+<p style="font-size: 30px;"> Aprende </p>
+</div>
+<div class="tarjeta">
+<div class="imagen-contenedor">
+<img src="https://i.pinimg.com/originals/d4/ef/c0/d4efc0f072a55e5ebd0a9946f9536a94.gif">
+</img>
+</div>
+<p style="font-size: 30px;"> Diviertete </p>
+</div>
+</div>
+</section>
+</section>
+<img src="https://i.pinimg.com/originals/a4/1b/3d/a41b3d811cc9ee14773ada1f81fd197e.gif" class="casino">
+</img>
+<script>
+function mostrarMensaje(event, seccion) {
+	event.stopPropagation();
+	const menuFlotante = document.getElementById("menuFlotante");
+	const popularesDiv = document.getElementById("populares");
+	const boton = event.currentTarget;
+	const rect = boton.getBoundingClientRect();
+	menuFlotante.style.left = rect.left + "px";
+	menuFlotante.style.top = (rect.bottom + window.scrollY) + "px";
+	menuFlotante.style.display = "block";
+	if (seccion === "populares") {
+	popularesDiv.style.display = "block";
+	} else {
+	popularesDiv.style.display = "none";
+}
+}
+document.getElementById("menuFlotante").addEventListener("click", function (event) {
+event.stopPropagation();
+});
+window.addEventListener("click", function () {
+document.getElementById("menuFlotante").style.display = "none";
+});
+</script>
+</body>
+</html>
