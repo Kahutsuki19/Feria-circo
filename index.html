@@ -1,279 +1,218 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Smooch+Sans:wght@100..900&display=swap" rel="stylesheet">
-<style>	
-	body{ 	
-	font-family: Smooch Sans;
-	overflow-x: hidden;
-	margin: 0;
-	text-align: center;
-	background: linear-gradient(to bottom, #6a4a4a, #6a4a4a, #6a4a4a, #6a4a4a, #38212a, #38212a);
-    	flex-direction: column;
-	color: white;
-	}
-	.mi-imagen {
-	display: block;
-	width: 1500px;
-	height: auto;
-	cursor: pointer;
-	background: radial-gradient(circle at center, white, blue);
-	margin-top: -200px;
-	margin-left: -100px;
-	z-index: -1;
-	}
-    	header .container {
-    	max-width: 1200px;
-    	margin: auto;
-    	padding: 0 20px;
-    	display: flex;
-    	justify-content: space-between;
-    	align-items: center;
-	z-index: 1000;
-    	}
-    	header nav{
-    	display: flex;
-    	}
-    	header nav h1{
-    	margin-left: 20px;
-    	transition: color 0.75s ease;
-    	cursor: pointer;
-    	}
-    	header nav h1:hover{
-    	color: white;
-    	}
-	.encima{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 1000;
-	padding: 20px;
-	}
-	.CIRCUS{
-	font-size: 100px;
-	margin-top: 170px;
-	color: white;
-	text-shadow:
-	-1px -1px 0 black,
-	1px -1px 0 black,
-	-1px  1px 0 black,
-	1px  1px 0 black;
-	}
-	.autores {
-	padding: 50px 20px;
-	text-align: center;
-	}
-	.autores h2{
-	color: #333;
-	margin-bottom: 40px;
-	}
-	.tarjetas {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 20px;
-	justify-content: center;
-	margin-top: 30px;
-	}
-	.tarjeta {
-	color: white;
-	width: 280px;
-	padding: 20px;
-	border-radius: 10px;
-	transition: transform 0.3s ease;
-	position: relative;
-	overflow: hidden;
-	}
-	.tarjeta:hover {
-	transform: scale(1.05);
-	}
-	.tarjeta img {
-	width: 180px;
-	height: 180px;
-	object-fit: cover;
-	border-radius: 50%;
-	display: block;
-	margin: 0 auto;
-	border; 4px solid white;
-	box-shadow: 0 0 10px rgba(0,0,0,0.3);
-	}
-	.tarjeta .imagen-contenedor {
-	position: relative;
-	border-radius: 10px;
-	overflow: hidden;
-	}
-	.tarjeta .imagen-contenedor::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-image: url('');
-	background-size: cover;
-	background-position: center; 
-	transition: opacity 0.3s ease;
-	z-index: 2;
-	}
-	.tarjeta:hover .imagen-contenedor::before {
-	opacity: 0;
-	}
-	.tarjeta p {
-	font-size: 24px;
-	margin-top: 15px;
-	background-color: rgba(255, 255, 255, 0.2);
-	padding: 5px 10px;
-	border-radius: 8px;
-	}
-	.JUEGOS{
-	display: flex;
-	height: 500px;
-	font-size: 25px;
-	margin-left: 50px;
-	}
-	.rueda{
-	display: absolute;
-	padding: 50px;
-	height: 100px;
-	}
-	.descripcion{
-	width: 800px;
-	}
-	.casino{
-	width: 600px;
-	}
-</style>
-<img src="
-https://freight.cargo.site/w/800/i/a7382f7a71b468cfd99a91a14d387dfc74e5b759305309bbbdb0d70e692ee5cd/animacion-feria2.gif
-" alt="IMAGENENNENENEN" class="mi-imagen">
-<header class="encima" style="background-color: transparent;">
-<div class="container">  
-<a href="https://liceocanadiense.mayavirtual.net/my/"><img src="https://liceocanadiense.mayavirtual.net/pluginfile.php/1/theme_space/favicon/1747946624/nuevo_ico_lc.ico" alt=" 4to baco " width="70px" height="50px"></img></a>
-<div style="border-radius: 8px; padding: 10px; ">
-<nav>
-	<h1 onclick="mostrarMensaje(event, 'menu')" style="cursor:pointer;">
-	M E N U 
-	</h1>                
-	<h1 onclick="mostrarMensaje(event, 'populares')" style="cursor:pointer;">
-	P O P U L A R E S  
-	</h1>
-</nav>
-</div>
-</div>
-<div id="menuFlotante" style="display: none; position: absolute; z-index: 999; background-color: rgba(255, 239, 204, 0.3); border-radius: 8px; padding: 15px; font-family: 'Cinzel', serif; box-shadow: 0 0 10px rgba(0,0,0,0.2);">
-<div id="populares" style="border-radius: 8px; display: none; padding: 10px; background-color: transparent;">
-<a href="https://kahutsuki19.github.io/Feria-circo/TIROALPATO" style="font-family: Smooch Sans; font-size: 25px; color: #424136; text-decoration: none; display:block;">
-Tiro al pato
-</a>
-<a href="https://kahutsuki19.github.io/Feria-circo/ESQUIV" style="font-family: Smooch Sans; font-size: 25px; color: #424136; text-decoration: none; display:block;">
-Esquiva Extrema
-</a>
-<a href="https://kahutsuki19.github.io/Feria-circo/RELLENAELAGUA" style="font-family: Smooch Sans; font-size: 25px; color: #424136; text-decoration: none; display:block;">
-Puzzle de agua
-</a>
-</div>
-<div id="menu">
-<a href="https://kahutsuki19.git hub.io/Feria-circo/" style="font-family: Smooch Sans; font-size: 25px; color: #424136; text-decoration: none; display:block;">
-menu
-</a>
-</div>
-</div>
-<section class="CIRCUS">
-<h2> C I R C U S</h2>
-</section>
-</header>
-</head>
-<body>
-<section id="autores" class="autores" style="padding: 70px; margin-top: -250px;">
-<div class="tarjetas">
-<div class="tarjeta">
-<a href="https://kahutsuki19.github.io/Feria-circo/RELLENAELAGUA" style="font-family: Smooch Sans; font-size: 30px; color: white; text-decoration: none; display:block;"> 
-<div class="imagen-contenedor">
-<img src="https://www.coolmathgames.com/sites/default/files/2022-09/Color%20Sorting%20Game%20Lipuzz%20Water%20Sort%20Gameplay.gif"></img>
-</div>
-<p>Puzzle de agua </a></p>	
-</div>
-<div class="tarjeta">
-<a href="https://kahutsuki19.github.io/Feria-circo/ESQUIV" style="font-family: Smooch Sans; font-size: 30px; color: white; text-decoration: none; display:block;">
-<div class="imagen-contenedor">
-<img src="https://i.gifer.com/origin/f5/f5baef4b6b6677020ab8d091ef78a3bc_w200.gif">
-</img>
-</div>
-<p> Esquiva!! </a></p>
-</div>
-<div class="tarjeta">
-<a href="https://kahutsuki19.github.io/Feria-circo/TIROALPATO" style="font-family: Smooch Sans; font-size: 30px; color: white; text-decoration: none; display:block;">
-<div class="imagen-contenedor">
-<img src="https://lh6.ggpht.com/_SdN1l4rFz9I/SWpGn9GUmdI/AAAAAAAAAqM/8VSD6YBy2Po/w1200-h630-p-k-no-nu/tiro%20al%20pato.jpg">
-</img>
-</div>
-<p> Tiro al Pato </a></p>
-</div>
-</div>
-</section>
-</section>
-<section class="JUEGOS" style="margin-bottom: 200px;">
-<section class="descripcion">
-<p style="font-size: 40px;"> Carnival </p>
-<p> Un lugar donde <strong>jugar</strong> es solo el comienzo...</p>
-<p> Este es un espacio creado especialmente para ti, donde la diversión se une con el conocimiento.
-	Aquí no solo podrás disfrutar de juegos emocionantes y coloridos, sino que también descubrirás el fascinante mundo de la <strong>programación</strong> de una forma práctica, interactiva y creativa. Cada juego que encuentres ha sido pensado para ayudarte a aprender conceptos esenciales de código mientras te diviertes, sin darte cuenta estarás desarrollando habilidades que te servirán para toda la vida.</p>
-<p>Prepárate para una aventura llena de desafíos, colores, lógica, imaginación y aprendizaje. ¡Tu viaje como programador/a comienza jugando!</p>
-</section>
-<section class="rueda">
-<img src="
-https://media.baamboozle.com/uploads/images/544136/1649834141_60623_gif-url.gif
-"></img>
-</section>
-</section>
-<section class="autores" style="padding: 70px; margin-top: -250px;">
-<div class="tarjetas">
-
-<div class="tarjeta">
-<div class="imagen-contenedor">
-<img src="https://i.pinimg.com/originals/49/d4/c4/49d4c4a80eb2845798a84c4dc515b474.gif">
-</img>
-</div>
-<p style="font-size: 30px;"> Aprende </p>
-</div>
-<div class="tarjeta">
-<div class="imagen-contenedor">
-<img src="https://i.pinimg.com/originals/d4/ef/c0/d4efc0f072a55e5ebd0a9946f9536a94.gif">
-</img>
-</div>
-<p style="font-size: 30px;"> Diviertete </p>
-</div>
-</div>
-</section>
-</section>
-<img src="https://i.pinimg.com/originals/a4/1b/3d/a41b3d811cc9ee14773ada1f81fd197e.gif" class="casino">
-</img>
-<script>
-function mostrarMensaje(event, seccion) {
-	event.stopPropagation();
-	const menuFlotante = document.getElementById("menuFlotante");
-	const popularesDiv = document.getElementById("populares");
-	const boton = event.currentTarget;
-	const rect = boton.getBoundingClientRect();
-	menuFlotante.style.left = rect.left + "px";
-	menuFlotante.style.top = (rect.bottom + window.scrollY) + "px";
-	menuFlotante.style.display = "block";
-	if (seccion === "populares") {
-	popularesDiv.style.display = "block";
-	} else {
-	popularesDiv.style.display = "none";
-}
-}
-document.getElementById("menuFlotante").addEventListener("click", function (event) {
-event.stopPropagation();
-});
-window.addEventListener("click", function () {
-document.getElementById("menuFlotante").style.display = "none";
-});
-</script>
-</body>
+<html>
+  <meta charset="UTF-8" />
+  <head>
+    <title>AXIS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arsenal:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arsenal:ital,wght@0,400;0,700;1,400;1,700&family=Bowlby+One+SC&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arsenal:ital,wght@0,400;0,700;1,400;1,700&family=Bowlby+One+SC&family=Nova+Slim&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: black;
+        overflow-x: hidden;
+        font-family: Arsenal;
+      }
+      h1 {
+        color: rgb(255, 255, 255);
+        text-shadow: 0 0 10px rgb(63, 63, 63), 0 0 20px rgb(63, 63, 63),
+          0 0 40px rgb(63, 63, 63);
+        font-family: Nova Slim;
+      }
+      h2 {
+        text-align: center;
+        padding-left: 50px;
+        color: white;
+        font-family: Nova Slim;
+      }
+      .hover-menu {
+        position: relative;
+        display: inline-block;
+      }
+      .hover-trigger {
+        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 6px;
+        display: inline-block;
+      }
+      .menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        min-width: 160px;
+        margin-top: 8px;
+        background: white;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        border-radius: 8px;
+        padding: 6px;
+        opacity: 0;
+        transform: translateY(6px);
+        pointer-events: none;
+        transition: opacity 0.18s ease, transform 0.18s ease;
+      }
+      .menu a {
+        display: block;
+        padding: 8px 10px;
+        text-decoration: none;
+        color: #111;
+        border-radius: 6px;
+      }
+      .menu a:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+      .hover-menu:hover .menu,
+      .hover-menu:focus-within .menu {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+      .principal {
+        width: 100%;
+        height: auto;
+        flex-wrap: wrap;
+        flex-basis: 200;
+      }
+      .casillas {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 10%;
+      }
+      .casilla {
+        flex-grow: 1;
+        flex-basis: 200;
+        align-items: center;
+      }
+      .casillaimg {
+        max-height: 300px;
+        min-height: 290px;
+        align-items: center;
+        border-radius: 40px;
+        background-color: rgb(255, 255, 255);
+        padding: 25px;
+        padding-bottom: 120px;
+      }
+      .casillatexto {
+        width: 190px;
+        height: 50px;
+        text-align: center;
+        padding-left: 35px;
+        margin-top: -105px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="text-align: center; font-size: 100px; bottom: 100px">AXIS</h1>
+    <div style="margin-top: -160px; padding-left: 50px; padding-bottom: 30px;">
+      <span class="hover-menu">
+        <span class="hover-trigger" tabindex="0">
+          <img
+            src="https://www.clipartmax.com/png/full/86-869265_alle-artikel-red-menu-icon-png.png"
+            width="50px"
+            alt=""
+        /></span>
+        <nav class="menu">
+          <a href="#">Ver productos</a>
+          <a href="#">Sobre videojuegos</a>
+          <a href="#">Comprar Revistas</a>
+        </nav>
+      </span>
+    </div>
+      <img
+        src="https://wallpapergod.com/images/hd/4k-gaming-2880X1800-wallpaper-5grp9a8zlhj78l9w.jpeg"
+        width="100%"
+      />
+      <p
+        style="
+          text-align: center;
+          margin: 30px;
+          padding: 30px;
+          background-color: rgb(255, 255, 255);
+          color: rgb(0, 0, 0);
+        "
+      >
+        Esta es una pagina donde encontraras informacion sobre tus videojuegos
+        favoritos u otros que quieras conocer; esta no solo incluira datos
+        interesantes y curiosos, si no que tambien tendra guias estructuradas,
+        discusiones, compras online y mucho más!! <br />
+        Explora un mundo llenu de nuevas posibilidades!!
+      </p>
+      //PRINCIPALLLLLLLLLL
+      <div class="casillas">
+        <div
+          class="casilla"
+          style="
+            width: 200px;
+            padding-left: 150px;
+            padding-right: 50px;
+            text-align: center;
+            margin-top: 100px;
+          "
+        >
+          <h1>AXIS</h1>
+          <p style="color: white">
+            Descrubre y explora todo sobre tu videojuego favorito; no solo
+            noticias y chismes<br />
+            si no tambien articulos con los que te podras guiar dentro de el
+            <br />
+            No te pierdas nada y comienza!!
+          </p>
+        </div>
+        <div class="casilla">
+          <img src="https://i.imgur.com/PPH49bl.png" width="700px"
+        </div>
+      </div>
+    </div>
+    //CASILLASSSS
+    <div class="principal" style="padding-bottom: 100px">
+      <h2 style="padding: 30px;">Los más facinantes!!</h2>
+      <div class="casillas">
+        <div class="casilla">
+          <img
+            src="https://mediaproxy.tvtropes.org/width/1200/https://static.tvtropes.org/pmwiki/pub/images/re4_vert.jpg"
+            class="casillaimg"
+          />
+          <p class="casillatexto">
+            Entra en un universo oscuro donde cada bala cuenta y el miedo te
+            acompaña en cada esquina. ¿Podrás sobrevivir?
+          </p>
+        </div>
+        <div class="casilla">
+          <img
+            src="https://m.media-amazon.com/images/M/MV5BOWFhMTZlMDItNjRhYy00ZWFlLWE4NTMtM2U1YWUzZWViNGQxXkEyXkFqcGc@._V1_.jpg"
+            class="casillaimg"
+          />
+          <p class="casillatexto">
+            ¡Corre, salta y derrota enemigos para salvar a la Princesa en un
+            mundo lleno de secretos y aventuras sin fin!
+          </p>
+        </div>
+        <div class="casilla">
+          <img
+            src="https://m.media-amazon.com/images/M/MV5BZWVjODJiMGQtZGViYS00ZDc0LWIxNDctYTc1NWJjYzA1M2EzXkEyXkFqcGc@._V1_.jpg"
+            class="casillaimg"
+          />
+          <p class="casillatexto">
+            Crea tu propio equipo, ficha estrellas y demuestra tu talento en la
+            cancha con el fútbol más realista.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+        <h1 style="background-color: rgb(0, 0, 0); color: rgb(192, 0, 0); padding-top: 60px; width: 100%; text-align: center;"> AXIS °2025 </h1>
 </html>
+
