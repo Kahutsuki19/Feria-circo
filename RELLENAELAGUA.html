@@ -1,280 +1,562 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Water Sort Puzzle</title>
-	<link href="https://fonts.googleapis.com/css2?family=Smooch+Sans:wght@400;700&display=swap" rel="stylesheet">
-	<style>
-	#startScreen {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background: rgba(0,0,0,0.9);
-	color: white;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	text-align: center;
-	z-index: 20;
-	}
-	#startScreen button {
-	margin-top: 40px;
-	padding: 15px 30px;
-	font-size: 2em;
-	background: #ff7043;
-	color: white;
-	border: none;
-	border-radius: 30px;
-	cursor: pointer;
-	transition: background 0.3s, transform 0.3s;
-	}
-	#startScreen button:hover {
-	background: #ff5722;
-	transform: translateY(-5px);
-	}
-	:root {
-	--bg-color: #6a4a4a;
-	--bg-color-end: #38212a;
-	--main-font: 'Smooch Sans', sans-serif;
-	--flask-border: #ffe0b2;
-	--flask-bg: rgba(255, 255, 255, 0.05);
-	--selected-border: #ffc107;
-	--button-bg: #ff7043;
-	--button-hover: #ff5722;
-	--glass-gradient-color1: rgba(255,255,255,0.3);
-	--glass-gradient-color2: rgba(255,255,255,0.15);
-	}
-	body {
-	margin: 0;
-	font-family: var(--main-font);
-	background: linear-gradient(135deg, var(--bg-color), var(--bg-color-end));
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 100vh;
-	color: white;
-	text-align: center;
-	overflow: hidden;
-	font-family: Smooch Sans;
-	font-size: 25px;
-	}
-	h1 { 
-	margin-top: 20px; 
-	font-size: 2.5rem; 
-	}
-	#game {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 20px;
-	margin: 40px auto;
-	max-width: 90%;
-	}
-	.frascos {
-	position: relative;
-	width: 70px;
-	height: 250px;
-	border: 4px solid var(--flask-border);
-	border-radius: 0 0 35px 35px;
-	background: var(--flask-bg);
-	display: flex;
-	flex-direction: column-reverse;
-	justify-content: flex-start;
-	overflow: hidden;
-	cursor: pointer;
-	transition: 0.2s;
-	}
-	.frascos:hover { transform: translateY(-5px); }
-	.frascos.selected {
-	border-color: var(--selected-border);
-	transform: scale(1.05) translateY(-10px);
-	box-shadow: 0 0 20px #ffc107aa;
-	}
-	.agua {
-	width: 100%;
-	height: 62.5px;
-	transition: 0.5s;
-	}
-	.frascos::before, .frascos::after {
-	content: '';
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	left: 0;
-	border-radius: 0 0 35px 35px;
-	}
-	.frascos::before { top: 0; box-shadow: inset 0 0 20px rgba(255,255,255,0.2); z-index: 1; }
-	.frascos::after {
-	top: 0;
-	background: linear-gradient(to top, transparent 50%, var(--glass-gradient-color1) 80%, var(--glass-gradient-color2) 90%);
-	z-index: 2;
-	opacity: 0.8;
-	}
-	#info { font-size: 1.2rem; margin: 20px; }
-	.boton {
-	padding: 10px 20px;
-	background: var(--button-bg);
-	color: white;
-	border: none;
-	border-radius: 20px;
-	cursor: pointer;
-	font-size: 1rem;
-	transition: 0.3s;
-	}
-	.boton:hover { background: var(--button-hover); transform: translateY(-3px); }
-	.win-message, .lose-message {
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	padding: 25px 40px;
-	border-radius: 15px;
-	font-size: 2rem;
-	font-weight: bold;
-	z-index: 1000;
-	text-shadow: 2px 2px 5px black;
-	animation: fadeIn 0.5s ease-out;
-	}
-	.win-message { background: rgba(76,175,80,0.9); box-shadow: 0 0 20px rgba(76,175,80,0.8); }
-	.lose-message { background: rgba(244,67,54,0.9); box-shadow: 0 0 20px rgba(244,67,54,0.8); }
-	@keyframes fadeIn {
-	from { opacity: 0; transform: translate(-50%, -60%); }
-	to { opacity: 1; transform: translate(-50%, -50%); }
-	}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Alien Sort Puzzle - Hardcore</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #111118;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            color: white;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #111118;
+            overflow: hidden;
+        }
+
+        #bgCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #hud {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .hud-panel {
+            background: rgba(10, 10, 15, 0.9);
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .btn-small {
+            background: #2a2a35;
+            color: white;
+            border: 1px solid #555;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        .btn-small:hover { background: #444; }
+
+        /* Contenedor principal del Puzzle */
+        #puzzle-area {
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 70px);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: center;
+            gap: 15px;
+            z-index: 10;
+            padding: 15px;
+        }
+
+        /* Diseño de los Tubos ajustado para que quepan muchos */
+        .bottle {
+            width: 45px;
+            height: 160px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            flex-direction: column-reverse;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s;
+            background: rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .bottle.selected {
+            transform: translateY(-15px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .liquid-segment {
+            width: 100%;
+            height: 25%;
+            transition: height 0.3s;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(17, 17, 24, 0.9);
+            z-index: 20;
+        }
+
+        .hidden { display: none !important; }
+
+        .ui-panel {
+            background: rgba(10, 10, 15, 0.95);
+            border: 1px solid #444;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            max-width: 400px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #55cc55;
+        }
+
+        p {
+            font-size: 16px;
+            color: #ccc;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            background: #2a2a35;
+            color: white;
+            border: 2px solid #55cc55;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #55cc55;
+            color: #111;
+        }
+    </style>
 </head>
 <body>
-	<div id="startScreen">
-	<h1>Puzzle de Agua</h1>
-	<p>¡Bienvenido al Puzzle de agua! El objetivo del juego es simple:</p>
-	<p><strong>Clasifica el agua de colores en los tubos</strong> hasta que cada frasco contenga un solo color.</p>
-	<p>Para jugar, **toca un frasco para seleccionarlo** y luego **toca otro frasco para verter el agua**.</p>
-	<p>Recuerda que solo puedes verter agua sobre el mismo color o en un frasco vacío.</p>
-	<button class="boton" onclick="startGame()">¡Comenzar!</button>
-	</div>
-	<h1>Puzzle de agua - Nivel <span id="nivel">1</span></h1>
-	<div id="info"></div>
-	<div id="game"></div>
-	<button class="boton" onclick="reiniciarNivel()">Reiniciar Nivel</button>
-	<script>
-	function startGame() {
-	document.getElementById('startScreen').style.display = 'none';
-	crearNivel();
-	}
-	const niveles = [
-	{ frascos: 5, colores: ["#ff4081", "#00e5ff", "#ffee00", "#00e676"] },
-	{ frascos: 7, colores: ["#ff4081", "#00e5ff", "#ffee00", "#00e676", "#d500f9", "#ff9100"] },
-	{ frascos: 9, colores: ["#ff4081", "#00e5ff", "#ffee00", "#00e676", "#d500f9", "#ff9100", "#ff1744", "#651fff"] }
-	];
-	let nivelActual = 0, seleccion = null, isAnimating = false;
-	function crearNivel() {
-	const cont = document.getElementById("game");
-	cont.innerHTML = "";
-	document.getElementById("nivel").innerText = nivelActual + 1;
-	const { frascos, colores } = niveles[nivelActual];
-	let contenido = [];
-	colores.forEach(c => { for (let i = 0; i < 4; i++) contenido.push(c); });
-	contenido = contenido.sort(() => Math.random() - 0.5);
-	let lista = [];
-	for (let i = 0; i < colores.length; i++) lista.push(contenido.splice(0, 4));
-	for (let i = 0; i < frascos - colores.length; i++) lista.push([]);
-	lista = lista.sort(() => Math.random() - 0.5);
-	lista.forEach((col, i) => {
-		const frasco = document.createElement("div");
-		frasco.className = "frascos";
-		frasco.dataset.index = i;
-		frasco.onclick = () => seleccionar(frasco);
-		col.forEach(c => {
-		const agua = document.createElement("div");
-		agua.className = "agua";
-		agua.style.background = c;
-		frasco.appendChild(agua);
-		});
-	cont.appendChild(frasco);
-	});
-	}
-	function seleccionar(f) {
-	if (isAnimating) return;
-	if (!seleccion) {
-	if (f.children.length === 0) return;
-	seleccion = f;
-	f.classList.add("selected");
-	} else if (seleccion === f) {
-	f.classList.remove("selected");
-	seleccion = null;
-	} else {
-	transferir(seleccion, f);
-	}}
-	function transferir(origen, destino) {
-		const oc = [...origen.children], dc = [...destino.children];
-		const color = oc[oc.length - 1]?.style.background;
-		const tope = dc[dc.length - 1]?.style.background;
-		if (!color || dc.length === 4 || (dc.length > 0 && tope !== color)) {
-		seleccion.classList.remove("selected");
-		seleccion = null;
-		return;
-		}
-		isAnimating = true;
-		let count = 0;
-		for (let i = oc.length - 1; i >= 0 && oc[i].style.background === color; i--) count++;
-		let mover = Math.min(4 - dc.length, count);
-		for (let i = 0; i < mover; i++) {
-		const agua = origen.lastChild;
-		origen.removeChild(agua);
-		destino.appendChild(agua);
-		}
-		seleccion.classList.remove("selected");
-		seleccion = null;
-		isAnimating = false;
-		setTimeout(verificarEstado, 200);
-	}
-	function verificarEstado() {
-	const frascos = document.querySelectorAll(".frascos");
-	let completos = true, movimientos = false;
-	for (let f of frascos) {
-	const hijos = [...f.children];
-	if (hijos.length === 0) continue;
-	const c = hijos[0].style.background;
-	if (hijos.length !== 4 || hijos.some(h => h.style.background !== c)) completos = false;
-	}
-	if (completos) {
-	mostrarMensaje("¡Nivel superado!");
-	setTimeout(() => {
-	if (nivelActual < niveles.length - 1) {
-	nivelActual++;
-	crearNivel();
-	} else mostrarMensaje("¡Has ganado!", "win");
-	}, 1500);
-	return;}
-	for (let o of frascos) {
-	if (o.children.length === 0) continue;
-	const co = o.lastChild.style.background;
-	for (let d of frascos) {
-	if (o === d) continue;
-	const dc = [...d.children];
-	const td = dc[dc.length - 1]?.style.background;
-	if (dc.length < 4 && (dc.length === 0 || td === co)) movimientos = true;
-	}}
-		if (!movimientos) {
-		mostrarMensaje("¡Sin movimientos posibles!", "lose");
-		setTimeout(reiniciarNivel, 2000);
-	}}
-	function mostrarMensaje(texto, tipo = "win") {
-	const msg = document.createElement("div");
-	msg.innerText = texto;
-	msg.className = tipo === "win" ? "win-message" : "lose-message";
-	document.body.appendChild(msg);
-	setTimeout(() => msg.remove(), 2000);
-	}
-	function reiniciarNivel() { crearNivel(); }
-	document.addEventListener("DOMContentLoaded", () => {
-	document.getElementById('startScreen').style.display = 'flex';
-	});
-	</script>
+
+    <div id="game-container">
+        <canvas id="bgCanvas"></canvas>
+
+        <div id="hud" class="hidden">
+            <div class="hud-panel">NIVEL: <span id="level-display">1</span> / 6</div>
+            <button class="btn-small" id="restart-level-btn">REINICIAR NIVEL</button>
+        </div>
+
+        <div id="puzzle-area"></div>
+
+        <div class="overlay" id="start-screen">
+            <div class="ui-panel">
+                <h1>ALIEN SORT: HARDCORE</h1>
+                <p>Ordena la energía. Los niveles han sido diseñados a mano para llevar tu lógica al límite. Buena suerte.</p>
+                <button class="btn" id="start-btn">ACEPTAR EL RETO</button>
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="win-screen">
+            <div class="ui-panel">
+                <h1 style="color: #33ccff;">MUESTRAS ESTABILIZADAS</h1>
+                <p>Nivel superado. Prepárate, el siguiente es mucho peor.</p>
+                <button class="btn" style="border-color: #33ccff;" id="next-level-btn">CONTINUAR</button>
+            </div>
+        </div>
+        
+        <div class="overlay hidden" id="end-screen">
+            <div class="ui-panel">
+                <h1 style="color: #ff3366;">¡IMPOSIBLE!</h1>
+                <p>Has superado el nivel 6. Lograste resolver el caos absoluto de 16 botellas. Mis respetos.</p>
+                <button class="btn" style="border-color: #ff3366;" id="restart-game-btn">JUGAR DE NUEVO</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DIBUJO DEL FONDO ---
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        const stars = [];
+        const mountains = [];
+
+        function initBackground() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            
+            for(let i = 0; i < 50; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * (height * 0.7),
+                    size: Math.random() * 1.5
+                });
+            }
+
+            let groundY = height * 0.85;
+            for(let i = 0; i < 30; i++) {
+                mountains.push({
+                    x: i * 80,
+                    width: 60 + Math.random() * 60,
+                    height: 20 + Math.random() * 50
+                });
+            }
+        }
+
+        function drawBackground() {
+            ctx.clearRect(0, 0, width, height);
+
+            const bgGradient = ctx.createLinearGradient(0, 0, 0, height);
+            bgGradient.addColorStop(0, '#0a0a14');
+            bgGradient.addColorStop(1, '#181822');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.fillStyle = 'white';
+            stars.forEach(s => {
+                ctx.globalAlpha = 0.5 + Math.sin(Date.now() * 0.001 + s.x) * 0.5;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+
+            ctx.fillStyle = '#ffffdd';
+            ctx.beginPath();
+            ctx.arc(width - 100, 80, 20, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = '#0a0a14';
+            ctx.beginPath();
+            ctx.arc(width - 105, 75, 20, 0, Math.PI*2);
+            ctx.fill();
+
+            let groundY = height * 0.9;
+            ctx.fillStyle = '#1a1a22';
+            mountains.forEach(m => {
+                ctx.beginPath();
+                ctx.moveTo(m.x, groundY);
+                ctx.lineTo(m.x + m.width/2, groundY - m.height);
+                ctx.lineTo(m.x + m.width, groundY);
+                ctx.fill();
+            });
+
+            ctx.fillStyle = '#15151a';
+            ctx.fillRect(0, groundY, width, height - groundY);
+            
+            ctx.strokeStyle = '#222';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, groundY);
+            ctx.lineTo(width, groundY);
+            ctx.stroke();
+
+            requestAnimationFrame(drawBackground);
+        }
+
+        window.addEventListener('resize', () => {
+            stars.length = 0;
+            mountains.length = 0;
+            initBackground();
+        });
+
+        initBackground();
+        drawBackground();
+
+        // --- 2. LÓGICA DEL JUEGO CON NIVELES DISEÑADOS A MANO ---
+        
+        // 14 Colores disponibles para abarcar hasta el nivel más difícil
+        const COLORS = [
+            '#ff3366', // 0: Rosa
+            '#33ccff', // 1: Cyan
+            '#55cc55', // 2: Verde
+            '#ffcc00', // 3: Amarillo
+            '#cc33ff', // 4: Morado
+            '#ff8833', // 5: Naranja
+            '#ffffff', // 6: Blanco puro
+            '#33ffcc', // 7: Aqua
+            '#ff33cc', // 8: Magenta
+            '#ffff33', // 9: Amarillo brillante
+            '#5555ff', // 10: Azul oscuro
+            '#ff5555', // 11: Rojo
+            '#88ff33', // 12: Lima
+            '#ccaa77'  // 13: Bronce
+        ];
+
+        // Diseños estáticos. [Abajo, MedioAbajo, MedioArriba, Arriba]
+        const HARDCODED_LEVELS = [
+            // NIVEL 1 (Muy fácil: 2 colores, 4 tubos)
+            [
+                [0, 1, 0, 1],
+                [1, 0, 1, 0],
+                [], []
+            ],
+            // NIVEL 2 (Fácil: 3 colores, 5 tubos)
+            [
+                [0, 1, 2, 0],
+                [2, 0, 1, 2],
+                [1, 2, 0, 1],
+                [], []
+            ],
+            // NIVEL 3 (Intermedio: 5 colores, 7 tubos)
+            [
+                [3, 4, 1, 2],
+                [0, 3, 4, 1],
+                [2, 0, 3, 4],
+                [1, 2, 0, 3],
+                [4, 1, 2, 0],
+                [], []
+            ],
+            // NIVEL 4 (Difícil: 7 colores, 9 tubos)
+            [
+                [5, 2, 6, 1],
+                [0, 4, 3, 5],
+                [1, 6, 2, 0],
+                [3, 1, 4, 6],
+                [2, 5, 0, 4],
+                [6, 3, 1, 2],
+                [4, 0, 5, 3],
+                [], []
+            ],
+            // NIVEL 5 (Muy Difícil: 10 colores, 12 tubos)
+            [
+                [9, 5, 1, 8],
+                [0, 4, 7, 2],
+                [3, 6, 9, 5],
+                [1, 8, 0, 4],
+                [7, 2, 3, 6],
+                [8, 1, 5, 9],
+                [4, 0, 2, 7],
+                [6, 3, 4, 1],
+                [9, 8, 5, 0],
+                [2, 7, 6, 3],
+                [], []
+            ],
+            // NIVEL 6 (Extremo: 14 colores, 16 tubos)
+            // Diseñado para que la cima no tenga colores repetidos, forzando usar los tubos vacíos de inmediato.
+            [
+                [0, 7, 4, 10],
+                [1, 8, 5, 11],
+                [2, 9, 6, 12],
+                [3, 10, 7, 13],
+                [4, 11, 8, 0],
+                [5, 12, 9, 1],
+                [6, 13, 10, 2],
+                [7, 0, 11, 3],
+                [8, 1, 12, 4],
+                [9, 2, 13, 5],
+                [10, 3, 0, 6],
+                [11, 4, 1, 7],
+                [12, 5, 2, 8],
+                [13, 6, 3, 9],
+                [], []
+            ]
+        ];
+
+        let currentLevelIndex = 0;
+        let bottlesState = []; 
+        let selectedBottleIndex = null;
+        let originalLevelState = []; 
+
+        const puzzleArea = document.getElementById('puzzle-area');
+        const levelDisplay = document.getElementById('level-display');
+
+        function loadHardcodedLevel(index) {
+            let layout = HARDCODED_LEVELS[index];
+            let state = [];
+            
+            // Convertir los números del layout a los códigos hex de colores reales
+            for(let bottle of layout) {
+                let mappedBottle = [];
+                for(let colorIndex of bottle) {
+                    mappedBottle.push(COLORS[colorIndex]);
+                }
+                state.push(mappedBottle);
+            }
+            return state;
+        }
+
+        function renderBottles() {
+            puzzleArea.innerHTML = '';
+            
+            bottlesState.forEach((bottle, index) => {
+                const bottleDiv = document.createElement('div');
+                bottleDiv.className = 'bottle';
+                if (selectedBottleIndex === index) {
+                    bottleDiv.classList.add('selected');
+                }
+
+                bottle.forEach(color => {
+                    const segment = document.createElement('div');
+                    segment.className = 'liquid-segment';
+                    segment.style.backgroundColor = color;
+                    segment.style.boxShadow = `inset 0 0 10px rgba(0,0,0,0.5)`;
+                    bottleDiv.appendChild(segment);
+                });
+
+                bottleDiv.addEventListener('click', () => handleBottleClick(index));
+                puzzleArea.appendChild(bottleDiv);
+            });
+        }
+
+        function handleBottleClick(index) {
+            if (selectedBottleIndex === null) {
+                if (bottlesState[index].length > 0) {
+                    selectedBottleIndex = index;
+                    renderBottles();
+                }
+                return;
+            }
+
+            if (selectedBottleIndex === index) {
+                selectedBottleIndex = null;
+                renderBottles();
+                return;
+            }
+
+            const src = bottlesState[selectedBottleIndex];
+            const dest = bottlesState[index];
+
+            if (canPour(src, dest)) {
+                pourLiquid(src, dest);
+                selectedBottleIndex = null;
+                renderBottles();
+                
+                if (checkWin()) {
+                    setTimeout(() => {
+                        if (currentLevelIndex === HARDCODED_LEVELS.length - 1) {
+                            document.getElementById('end-screen').classList.remove('hidden');
+                        } else {
+                            document.getElementById('win-screen').classList.remove('hidden');
+                        }
+                    }, 500);
+                }
+            } else {
+                selectedBottleIndex = null;
+                renderBottles();
+            }
+        }
+
+        function canPour(src, dest) {
+            if (dest.length === 4) return false; 
+            if (dest.length === 0) return true;  
+            
+            const srcTopColor = src[src.length - 1];
+            const destTopColor = dest[dest.length - 1];
+            
+            return srcTopColor === destTopColor; 
+        }
+
+        function pourLiquid(src, dest) {
+            const colorToMove = src[src.length - 1];
+            
+            let amountAvailable = 0;
+            for (let i = src.length - 1; i >= 0; i--) {
+                if (src[i] === colorToMove) amountAvailable++;
+                else break;
+            }
+
+            const spaceInDest = 4 - dest.length;
+            const amountToMove = Math.min(amountAvailable, spaceInDest);
+
+            for (let i = 0; i < amountToMove; i++) {
+                dest.push(src.pop());
+            }
+        }
+
+        function checkWin() {
+            for (let bottle of bottlesState) {
+                if (bottle.length > 0) {
+                    if (bottle.length !== 4) return false; 
+                    const firstColor = bottle[0];
+                    for (let color of bottle) {
+                        if (color !== firstColor) return false; 
+                    }
+                }
+            }
+            return true;
+        }
+
+        function startLevel() {
+            bottlesState = loadHardcodedLevel(currentLevelIndex);
+            
+            originalLevelState = JSON.parse(JSON.stringify(bottlesState)); 
+            
+            selectedBottleIndex = null;
+            levelDisplay.innerText = currentLevelIndex + 1;
+            renderBottles();
+            
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('win-screen').classList.add('hidden');
+            document.getElementById('end-screen').classList.add('hidden');
+            document.getElementById('hud').classList.remove('hidden');
+        }
+
+        function restartCurrentLevel() {
+            bottlesState = JSON.parse(JSON.stringify(originalLevelState));
+            selectedBottleIndex = null;
+            renderBottles();
+        }
+
+        // --- Eventos de Botones ---
+        document.getElementById('start-btn').addEventListener('click', () => {
+            currentLevelIndex = 0;
+            startLevel();
+        });
+
+        document.getElementById('next-level-btn').addEventListener('click', () => {
+            currentLevelIndex++;
+            startLevel();
+        });
+
+        document.getElementById('restart-game-btn').addEventListener('click', () => {
+            currentLevelIndex = 0;
+            startLevel();
+        });
+
+        document.getElementById('restart-level-btn').addEventListener('click', () => {
+            restartCurrentLevel();
+        });
+
+    </script>
 </body>
 </html>
