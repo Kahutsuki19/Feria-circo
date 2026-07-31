@@ -30,6 +30,7 @@
       </div>
     </div>
     <div class="hud-right">
+      <span id="hudTimeLeft" class="hud-timer">⏱ 0.0s</span>
       <span id="hudCoins">🪙 0</span>
       <button id="btnFullscreen" title="Pantalla completa (F)">⛶</button>
       <button id="btnPause" title="Pausa (P)">⏸</button>
@@ -50,7 +51,7 @@
 
   <!-- ======= Pantalla de inicio ======= -->
   <div id="screenStart" class="overlay">
-    <div class="panel">
+    <div class="panel instructions">
       <h1>CARRERA <span class="accent">DOBLE</span></h1>
       <p class="subtitle">Un juego de carrera cooperativa para dos jugadores en el mismo teclado</p>
 
@@ -70,6 +71,7 @@
       </div>
 
       <p class="hint">Consejo: en algunos tramos pueden saltar sobre la cabeza del otro jugador para alcanzar más altura.<br>
+      Cada nivel tiene un tiempo límite — ¡corran contra el reloj y entre ustedes!<br>
       <kbd>P</kbd> pausa · <kbd>R</kbd> reinicia el nivel</p>
 
       <button id="btnStart" class="big-btn">Comenzar ▶</button>
@@ -79,9 +81,10 @@
 
   <!-- ======= Intro de nivel ======= -->
   <div id="screenLevelIntro" class="overlay hidden">
-    <div class="panel">
+    <div class="panel instructions">
       <div id="introLevelNum" class="level-tag">Nivel 1</div>
       <h2 id="introLevelName">Colinas Tranquilas</h2>
+      <div class="time-badge">⏱️ Tiempo límite: <span id="introTimeLimit">60</span>s</div>
       <p id="introLevelTip" class="hint"></p>
       <button id="btnLevelGo" class="big-btn">¡Listos! ▶</button>
     </div>
@@ -94,6 +97,15 @@
       <button id="btnResume" class="big-btn">Reanudar</button>
       <button id="btnRestartLevel" class="small-btn">Reiniciar nivel (R)</button>
       <button id="btnMainMenu" class="small-btn">Menú principal</button>
+    </div>
+  </div>
+
+  <!-- ======= Tiempo agotado ======= -->
+  <div id="screenTimeUp" class="overlay hidden">
+    <div class="panel instructions">
+      <h2>⏱️ ¡Tiempo agotado!</h2>
+      <p class="hint" id="timeUpMsg">Nadie llegó a la bandera a tiempo.</p>
+      <button id="btnRetryTimeUp" class="big-btn">Reintentar nivel ↻</button>
     </div>
   </div>
 
