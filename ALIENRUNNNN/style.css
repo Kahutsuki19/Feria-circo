@@ -104,6 +104,23 @@ canvas#game {
 .player-pill.finished { outline: 2px solid var(--accent); }
 
 .hud-right { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+
+.hud-timer {
+  background: rgba(0,0,0,0.45);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 14px;
+  border: 2px solid rgba(255,255,255,0.15);
+}
+.hud-timer.low {
+  color: #ff5a5a;
+  border-color: #ff5a5a;
+  animation: timer-pulse 0.6s infinite alternate;
+}
+@keyframes timer-pulse {
+  from { opacity: 1; }
+  to   { opacity: 0.5; }
+}
 #btnPause, #btnFullscreen {
   background: rgba(0,0,0,0.45);
   color: var(--cream);
@@ -273,3 +290,69 @@ kbd {
   border-radius: 8px;
 }
 .final-results .row.win { outline: 2px solid var(--accent); }
+
+/* ---------- Panel "instructions" ----------
+   Estilo tomado del otro juego del stand (panel oscuro simple, sin
+   pixel-font ni bordes de color): se usa solo en las pantallas que
+   muestran instrucciones antes de jugar (inicio y aviso de nivel). */
+.panel.instructions {
+  background: rgba(10, 10, 15, 0.95);
+  border: 1px solid #444;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+
+.panel.instructions h1,
+.panel.instructions h2 {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  text-shadow: none;
+  letter-spacing: 0;
+  color: var(--p1-color);
+}
+.panel.instructions h1 { font-size: 30px; }
+.panel.instructions h2 { font-size: 22px; }
+.panel.instructions h1 .accent { color: var(--accent); }
+
+.panel.instructions .subtitle,
+.panel.instructions .hint { color: #ccc; }
+
+.panel.instructions .level-tag {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid #444;
+}
+
+.time-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid #444;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+
+.panel.instructions .big-btn {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  background: #2a2a35;
+  color: #fff;
+  border: 2px solid var(--p1-color);
+  border-radius: 4px;
+  box-shadow: none;
+  transition: background 0.2s, color 0.2s;
+}
+.panel.instructions .big-btn:hover {
+  background: var(--p1-color);
+  color: #111;
+  filter: none;
+}
+.panel.instructions .big-btn:active {
+  transform: none;
+  box-shadow: none;
+}
+
+.panel.instructions .small-btn { border-color: #444; }
+.panel.instructions .small-btn:hover { background: rgba(255,255,255,0.08); }
