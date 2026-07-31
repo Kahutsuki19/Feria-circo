@@ -203,7 +203,7 @@ function buildLevel1() {
     id: 1,
     name: "Colinas Tranquilas",
     timeLimit: 60,
-    tip: "Usen A/D o ◄/► para moverse y W/▲ para saltar. Salten sobre la cabeza de los slimes para vencerlos. Tienen 60s para llegar a la bandera — ¡el primer tramo sin piso es sencillo, es solo para practicar!",
+    tip: "Usen A/D o ◄/► para moverse y W/▲ para saltar. Salten sobre la cabeza de los slimes para vencerlos. ¡El primer tramo sin piso es sencillo, es solo para practicar!",
     background: "bg_hills",
     cols, grid,
     spawn1: { c: 1 }, spawn2: { c: 2 },
@@ -428,6 +428,7 @@ const game = {
   lastTime: 0,
   runtimeCoins: null,  // Set de "c,r" recogidas en el nivel actual
   bannerShown: false,
+  timeUp: false,        // true cuando se acabó el tiempo sin que nadie llegara a la meta
 };
 
 function makeInitialPlayerState(id, spawnCol) {
@@ -472,6 +473,7 @@ function loadLevel(index) {
   game.cameraX = 0;
   game.cameraInit = false;
   game.bannerShown = false;
+  game.timeUp = false;
 
   document.getElementById("hudLevelName").textContent = `Nivel ${lvl.id} — ${lvl.name}`;
   document.getElementById("finishBanner").classList.add("hidden");
@@ -1019,6 +1021,12 @@ function updateHud() {
   document.getElementById("p1Time").textContent = (player1.finished ? player1.time : game.levelTime).toFixed(1) + "s";
   document.getElementById("p2Time").textContent = (player2.finished ? player2.time : game.levelTime).toFixed(1) + "s";
   document.getElementById("hudCoins").textContent = "🪙 " + game.coinsCollected;
+
+  const remaining = Math.max(0, game.level.timeLimit - game.levelTime);
+  const timeEl = document.getElementById("hudTimeLeft");
+  timeEl.textContent = "⏱ " + remaining.toFixed(1) + "s";
+  // el aviso de "poco tiempo" solo tiene sentido si todavía nadie llegó a la meta
+  timeEl.classList.toggle("low", remaining <= 10 && !game.bannerShown);
 }
 
 // ---------------------------------------------------------------------
@@ -1036,13 +1044,23 @@ function tick(now) {
   if (game.state === "PLAYING") {
     game.levelTime += dt;
     const lvl = game.level;
-    stepOscillators(lvl, dt);
-    updateEnemies(lvl, dt);
-    updatePlayer(player1, player2, dt, lvl);
-    updatePlayer(player2, player1, dt, lvl);
-    resolvePlayerVsPlayer(player1, player2, dt);
-    updateCamera(lvl, dt);
-    updateHud();
+
+    // el límite de tiempo solo puede "fallar" el nivel si todavía nadie
+    // llegó a la bandera; si alguien ya llegó, el otro jugador puede
+    // seguir intentándolo sin prisa hasta que pulsen "Continuar"
+    if (!game.bannerShown && !game.timeUp && game.levelTime >= lvl.timeLimit) {
+      handleTimeUp();
+    }
+
+    if (game.state === "PLAYING") {
+      stepOscillators(lvl, dt);
+      updateEnemies(lvl, dt);
+      updatePlayer(player1, player2, dt, lvl);
+      updatePlayer(player2, player1, dt, lvl);
+      resolvePlayerVsPlayer(player1, player2, dt);
+      updateCamera(lvl, dt);
+      updateHud();
+    }
   }
   render();
 }
@@ -1052,7 +1070,7 @@ requestAnimationFrame(tick);
 // 15) MÁQUINA DE ESTADOS / MENÚS
 // ---------------------------------------------------------------------
 function showOnly(id) {
-  ["screenStart", "screenLevelIntro", "screenPause", "screenFinal"].forEach(s => {
+  ["screenStart", "screenLevelIntro", "screenPause", "screenFinal", "screenTimeUp"].forEach(s => {
     document.getElementById(s).classList.toggle("hidden", s !== id);
   });
 }
@@ -1062,6 +1080,7 @@ function goToLevelIntro(index) {
   const lvl = game.level;
   document.getElementById("introLevelNum").textContent = "Nivel " + lvl.id + " de " + LEVELS.length;
   document.getElementById("introLevelName").textContent = lvl.name;
+  document.getElementById("introTimeLimit").textContent = lvl.timeLimit;
   document.getElementById("introLevelTip").textContent = lvl.tip;
   showOnly("screenLevelIntro");
   document.getElementById("hud").classList.add("hidden");
@@ -1129,11 +1148,21 @@ function restartLevel() {
   goToLevelIntro(game.levelIndex);
 }
 
+function handleTimeUp() {
+  game.timeUp = true;
+  game.state = "TIME_UP";
+  document.getElementById("hud").classList.add("hidden");
+  document.getElementById("timeUpMsg").textContent =
+    `Nadie llegó a la bandera antes de que se acabara el tiempo (${game.level.timeLimit}s). ¡Inténtenlo de nuevo!`;
+  showOnly("screenTimeUp");
+}
+
 function handleGlobalKey(code) {
   if (code === "Enter") {
     if (game.state === "MENU") { goToLevelIntro(0); }
     else if (game.state === "LEVEL_INTRO") { startPlaying(); }
     else if (game.state === "PLAYING" && game.bannerShown) { finishLevelAndAdvance(); }
+    else if (game.state === "TIME_UP") { restartLevel(); }
   }
   if (code === "KeyP" && game.state === "PLAYING") togglePause();
   else if (code === "KeyP" && game.state === "PAUSED") togglePause();
@@ -1198,6 +1227,7 @@ document.getElementById("btnMainMenu").addEventListener("click", () => {
   game.state = "MENU";
 });
 document.getElementById("btnContinue").addEventListener("click", finishLevelAndAdvance);
+document.getElementById("btnRetryTimeUp").addEventListener("click", restartLevel);
 document.getElementById("btnPlayAgain").addEventListener("click", () => {
   game.wins = { p1: 0, p2: 0 };
   game.levelResults = [];
