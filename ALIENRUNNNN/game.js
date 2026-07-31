@@ -385,8 +385,8 @@ function buildLevel4() {
 
   const platforms = [
     makePlatform({ axis: "x", min: 16 * TILE, max: 18 * TILE, fixed: (ROWS - 3) * TILE, w: 2 * TILE, h: 20, speed: 100 }),
-    makePlatform({ axis: "x", min: 36 * TILE, max: 39 * TILE, fixed: (ROWS - 4) * TILE, w: 2 * TILE, h: 20, speed: 115 }),
-    makePlatform({ axis: "x", min: 56 * TILE, max: 58 * TILE, fixed: (ROWS - 5) * TILE, w: 2 * TILE, h: 20, speed: 130 }),
+    makePlatform({ axis: "x", min: 36 * TILE, max: 43 * TILE, fixed: (ROWS - 4) * TILE, w: 2 * TILE, h: 20, speed: 115 }),
+    makePlatform({ axis: "x", min: 56 * TILE, max: 58 * TILE, fixed: (ROWS - 3) * TILE, w: 2 * TILE, h: 20, speed: 130 }),
   ];
   const enemies = []; // sin slimes: aquí el reto son las sierras y la precisión de los saltos
   const saws = [
