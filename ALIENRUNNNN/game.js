@@ -1,11 +1,3 @@
-"use strict";
-/* =====================================================================
-   CARRERA DOBLE — juego de plataformas/carrera para 2 jugadores (1 teclado)
-   Usa los sprites de Kenney's "New Platformer Pack".
-   Código base pensado para editarse fácilmente: casi todo el diseño de
-   niveles vive en la sección "NIVELES" como listas simples de datos.
-   ===================================================================== */
-
 // ---------------------------------------------------------------------
 // 1) CONSTANTES GENERALES
 // ---------------------------------------------------------------------
@@ -171,32 +163,47 @@ function makeEnemy(col, groundRow, minCol, maxCol, speed) {
 // ---------------------------------------------------------------------
 // 5) NIVELES
 // ---------------------------------------------------------------------
+// Coloca una fila de "piedras" (plataformas de una sola casilla, sin nada
+// debajo) — la pieza básica de los tramos "solo plataformas" sin piso.
+function stones(grid, list) {
+  list.forEach(([c, row]) => block(grid, c, c, row));
+}
+
 function buildLevel1() {
-  const cols = 46;
+  const cols = 58;
   const grid = makeGrid(cols);
   ground(grid, 0, cols - 1);
 
-  // pequeños huecos de práctica (sencillos, con red de lava visible abajo)
-  [[14, 14], [27, 28]].forEach(([a, b]) => { clearGap(grid, a, b); lavaFloor(grid, a, b); });
+  // huecos de práctica (con red de lava visible abajo)
+  [[13, 13], [27, 28]].forEach(([a, b]) => { clearGap(grid, a, b); lavaFloor(grid, a, b); });
 
-  // un par de plataformas flotantes para practicar el salto (con monedas de bono)
-  block(grid, 9, 11, ROWS - 4);
-  coinAt(grid, 10, ROWS - 5);
-  block(grid, 33, 35, ROWS - 4);
-  coinAt(grid, 34, ROWS - 5);
+  // primer tramo "solo plataformas": introduce el mecanismo sin piso
+  clearGap(grid, 40, 46);
+  lavaFloor(grid, 40, 46);
+  stones(grid, [[41, ROWS - 2], [43, ROWS - 2], [45, ROWS - 2]]);
+
+  // plataformas flotantes de bonificación (con monedas de bono)
+  block(grid, 6, 7, ROWS - 4);
+  coinAt(grid, 6, ROWS - 5);
+  block(grid, 32, 34, ROWS - 4);
+  coinAt(grid, 33, ROWS - 5);
+
+  [4, 20, 51].forEach(c => coinAboveGround(grid, c, 2));
 
   flagAt(grid, cols - 3, ROWS - 3);
 
-  // un par de enemigos lentos y fáciles para practicar cómo saltarles encima
+  // tres enemigos lentos para practicar cómo saltarles encima
   const enemies = [
     makeEnemy(19, ROWS - 2, 16, 22, 55),
-    makeEnemy(39, ROWS - 2, 37, 43, 55),
+    makeEnemy(37, ROWS - 2, 35, 39, 60),
+    makeEnemy(52, ROWS - 2, 49, 55, 55),
   ];
 
   return {
     id: 1,
     name: "Colinas Tranquilas",
-    tip: "Usen A/D o ◄/► para moverse y W/▲ para saltar. Salten sobre la cabeza de los slimes para vencerlos. ¡Nivel tranquilo, solo para practicar!",
+    timeLimit: 60,
+    tip: "Usen A/D o ◄/► para moverse y W/▲ para saltar. Salten sobre la cabeza de los slimes para vencerlos. Tienen 60s para llegar a la bandera — ¡el primer tramo sin piso es sencillo, es solo para practicar!",
     background: "bg_hills",
     cols, grid,
     spawn1: { c: 1 }, spawn2: { c: 2 },
@@ -205,57 +212,67 @@ function buildLevel1() {
 }
 
 function buildLevel2() {
-  const cols = 64;
+  const cols = 78;
   const grid = makeGrid(cols);
   ground(grid, 0, cols - 1);
 
-  const gaps = [[10, 11], [20, 21], [37, 43], [53, 54]];
+  const gaps = [[9, 10], [19, 20], [45, 46]];
   gaps.forEach(([a, b]) => { clearGap(grid, a, b); lavaFloor(grid, a, b); });
 
   // pinchos sobre el suelo normal
-  [16, 30, 48].forEach(c => spike(grid, c, ROWS - 2));
+  [25, 41, 70].forEach(c => spike(grid, c, ROWS - 2));
 
-  // plataformas flotantes de bonificación (misma altura que en el Nivel 1:
-  // 2 casillas sobre el suelo, dentro del alcance de un salto normal)
-  block(grid, 6, 7, ROWS - 4);
-  coinAt(grid, 6, ROWS - 5);
-  coinAt(grid, 9, ROWS - 5); // piedra de un solo tile: cadena de saltos hacia el hueco
-  block(grid, 9, 9, ROWS - 4);
-  block(grid, 33, 33, ROWS - 4); // pequeña cadena de saltos antes del puente móvil
-  coinAt(grid, 33, ROWS - 5);
-  block(grid, 35, 35, ROWS - 4);
-  coinAt(grid, 35, ROWS - 5);
-  block(grid, 45, 47, ROWS - 4);
-  coinAt(grid, 46, ROWS - 5);
-  block(grid, 50, 50, ROWS - 4);
-  coinAt(grid, 50, ROWS - 5);
+  // plataformas flotantes de bonificación
+  block(grid, 13, 14, ROWS - 4);
+  coinAt(grid, 13, ROWS - 5);
+  block(grid, 49, 49, ROWS - 4);
+  coinAt(grid, 49, ROWS - 5);
+  block(grid, 52, 52, ROWS - 4);
+  coinAt(grid, 52, ROWS - 5);
 
   // monedas sueltas (2 casillas sobre el suelo real de cada columna)
-  [4, 26, 59].forEach(c => coinAboveGround(grid, c, 2));
+  [4, 27, 67].forEach(c => coinAboveGround(grid, c, 2));
+
+  // hueco largo cruzado por una plataforma móvil (sin suelo debajo)
+  clearGap(grid, 30, 36);
+  lavaFloor(grid, 30, 36);
+
+  // segundo tramo "solo plataformas", más largo y exigente que en el nivel 1,
+  // con una sierra vigilando el tramo central
+  clearGap(grid, 55, 64);
+  lavaFloor(grid, 55, 64);
+  stones(grid, [
+    [56, ROWS - 2], [58, ROWS - 3], [60, ROWS - 2], [62, ROWS - 3],
+  ]);
 
   flagAt(grid, cols - 3, ROWS - 3);
 
   const platforms = [
-    makePlatform({ axis: "x", min: 37 * TILE, max: 41 * TILE, fixed: (ROWS - 2) * TILE, w: 2 * TILE, h: 20, speed: 90 }),
+    makePlatform({ axis: "x", min: 31 * TILE, max: 35 * TILE, fixed: (ROWS - 2) * TILE, w: 2 * TILE, h: 20, speed: 95 }),
   ];
   const enemies = [
-    makeEnemy(24, ROWS - 2, 23, 35, 70),
-    makeEnemy(56, ROWS - 2, 55, 62, 85),
+    makeEnemy(23, ROWS - 2, 21, 29, 70),
+    makeEnemy(38, ROWS - 2, 37, 44, 75),
+    makeEnemy(69, ROWS - 2, 67, 75, 90),
+  ];
+  const saws = [
+    makePlatform({ axis: "y", min: 2 * TILE, max: 6 * TILE, fixed: 59.5 * TILE, w: 44, h: 44, speed: 160 }),
   ];
 
   return {
     id: 2,
     name: "Cañón de Setas",
-    tip: "¡Toca practicar el salto! Encadenen saltos entre plataformas, esquiven pinchos y un slime patrullando. Si caen a la lava reaparecen en el inicio del nivel.",
+    timeLimit: 65,
+    tip: "¡Toca practicar el salto! Dos tramos sin piso: ahí solo hay plataformas, nada de suelo. Esquiven pinchos, una sierra y un slime patrullando. Si caen, reaparecen en el inicio.",
     background: "bg_mushrooms",
     cols, grid,
     spawn1: { c: 1 }, spawn2: { c: 2 },
-    platforms, enemies, saws: [], checkpoints: [],
+    platforms, enemies, saws, checkpoints: [],
   };
 }
 
 function buildLevel3() {
-  const cols = 85;
+  const cols = 108;
   const grid = makeGrid(cols);
 
   // tramos de suelo a distinta altura (mesas) separados por huecos
@@ -263,67 +280,134 @@ function buildLevel3() {
   ground(grid, 11, 18);
   ground(grid, 25, 33);
   ground(grid, 42, 45);
-  // Meseta elevada: 2 casillas sobre el suelo normal (igual que en el resto
-  // del juego), así que SIEMPRE se puede alcanzar en solitario con un salto
-  // normal — antes estaba a 3 casillas y era un muro imposible de subir.
   plateau(grid, 46, 55, ROWS - 4);
   plateau(grid, 56, 57, ROWS - 3);  // escalón de bajada
   ground(grid, 58, 69);
   ground(grid, 75, 84);
+  ground(grid, 98, 107);
 
   // huecos (abismos) — algunos se cruzan con plataformas móviles
-  [[9, 10], [19, 24], [34, 41], [70, 74]].forEach(([a, b]) => { clearGap(grid, a, b); lavaFloor(grid, a, b); });
+  const gaps = [[9, 10], [19, 24], [34, 41], [70, 74]];
+  gaps.forEach(([a, b]) => { clearGap(grid, a, b); lavaFloor(grid, a, b); });
 
-  // pinchos (uno extra encima de la meseta, entre la sierra y el enemigo)
-  [14, 61].forEach(c => spike(grid, c, ROWS - 2));
+  // pinchos
+  [14, 61, 80].forEach(c => spike(grid, c, ROWS - 2));
   spike(grid, 52, ROWS - 4); // pincho sobre la propia superficie de la meseta
 
   // puntos de control (actualizan el punto de reaparición de cada jugador)
   checkpointAt(grid, 30, ROWS - 3);
   checkpointAt(grid, 76, ROWS - 3);
 
-  // monedas de bonificación (2 casillas sobre el suelo real de cada columna,
-  // sea suelo normal o la meseta elevada — antes usaban una fila fija
-  // demasiado alta y la mayoría quedaban fuera de alcance)
+  // monedas de bonificación
   [5, 13, 29, 77].forEach(c => coinAboveGround(grid, c, 2));
 
-  // bono muy alto y opcional sobre la meseta: NO bloquea el camino
-  // principal, pero solo se alcanza saltando sobre la cabeza del
-  // compañero (3 casillas de altura) — aquí es donde de verdad hace
-  // falta trabajar en equipo.
+  // bono muy alto y opcional: solo se alcanza saltando sobre la cabeza del
+  // compañero (3 casillas de altura) — aquí de verdad hace falta trabajar
+  // en equipo.
   [49, 50, 51].forEach(c => coinAt(grid, c, 3));
 
-  flagAt(grid, 83, ROWS - 3);
+  // tercer tramo "solo plataformas": el más largo del recorrido clásico,
+  // sin ninguna red de suelo normal, con piedras a distinta altura y dos
+  // sierras vigilando el cruce.
+  clearGap(grid, 85, 97);
+  lavaFloor(grid, 85, 97);
+  stones(grid, [
+    [86, ROWS - 2], [88, ROWS - 3], [90, ROWS - 2], [92, ROWS - 4],
+    [93, ROWS - 4], [95, ROWS - 2],
+  ]);
+  checkpointAt(grid, 90, ROWS - 3);
+
+  flagAt(grid, 105, ROWS - 3);
 
   const platforms = [
     makePlatform({ axis: "x", min: 19 * TILE, max: 23 * TILE, fixed: (ROWS - 2) * TILE, w: 2 * TILE, h: 20, speed: 100 }),
-    makePlatform({ axis: "x", min: 34 * TILE, max: 39 * TILE, fixed: (ROWS - 2) * TILE, w: 2 * TILE, h: 20, speed: 110 }),
-    makePlatform({ axis: "x", min: 70 * TILE, max: 73 * TILE, fixed: (ROWS - 2) * TILE, w: 2 * TILE, h: 20, speed: 135 }),
+    makePlatform({ axis: "x", min: 34 * TILE, max: 39 * TILE, fixed: (ROWS - 2) * TILE, w: 2 * TILE, h: 20, speed: 115 }),
+    makePlatform({ axis: "x", min: 70 * TILE, max: 73 * TILE, fixed: (ROWS - 2) * TILE, w: 2 * TILE, h: 20, speed: 140 }),
   ];
   const enemies = [
-    makeEnemy(16, ROWS - 2, 15, 18, 80),
-    makeEnemy(32, ROWS - 2, 26, 33, 85),
-    makeEnemy(49, ROWS - 4, 47, 54, 75), // patrulla la meseta elevada
-    makeEnemy(80, ROWS - 2, 78, 83, 95),
+    makeEnemy(16, ROWS - 2, 15, 18, 85),
+    makeEnemy(32, ROWS - 2, 26, 33, 90),
+    makeEnemy(49, ROWS - 4, 47, 54, 80), // patrulla la meseta elevada
+    makeEnemy(80, ROWS - 2, 78, 84, 100),
+    makeEnemy(100, ROWS - 2, 99, 106, 90),
   ];
   const saws = [
-    makePlatform({ axis: "y", min: 3 * TILE, max: 7 * TILE, fixed: 9.5 * TILE, w: 44, h: 44, speed: 150 }),   // sobre el hueco 1
-    makePlatform({ axis: "x", min: 47 * TILE, max: 54 * TILE, fixed: (ROWS - 5) * TILE, w: 44, h: 44, speed: 130 }), // barre la meseta alta
-    makePlatform({ axis: "y", min: 3 * TILE, max: 7 * TILE, fixed: 65 * TILE, w: 44, h: 44, speed: 175 }),   // sube y baja a media altura
+    makePlatform({ axis: "y", min: 3 * TILE, max: 7 * TILE, fixed: 9.5 * TILE, w: 44, h: 44, speed: 155 }),
+    makePlatform({ axis: "x", min: 47 * TILE, max: 54 * TILE, fixed: (ROWS - 5) * TILE, w: 44, h: 44, speed: 135 }),
+    makePlatform({ axis: "y", min: 3 * TILE, max: 7 * TILE, fixed: 65 * TILE, w: 44, h: 44, speed: 180 }),
+    makePlatform({ axis: "y", min: 2 * TILE, max: 6 * TILE, fixed: 89 * TILE, w: 44, h: 44, speed: 165 }),
   ];
 
   return {
     id: 3,
     name: "Abismo Ardiente",
-    tip: "Nivel muy difícil incluso trabajando juntos. Consejo clave: uno puede saltar sobre la cabeza del otro para ganar altura extra en la meseta elevada. Usen S/▼ para agacharse bajo las sierras.",
+    timeLimit: 90,
+    tip: "El nivel más largo y difícil del recorrido clásico. Consejo clave: uno puede saltar sobre la cabeza del otro para ganar altura extra. Usen S/▼ para agacharse bajo las sierras. El último tramo no tiene piso: solo plataformas.",
     background: "bg_desert",
     cols, grid,
     spawn1: { c: 1 }, spawn2: { c: 2 },
-    platforms, enemies, saws, checkpoints: [{ c: 30 }, { c: 76 }],
+    platforms, enemies, saws, checkpoints: [{ c: 30 }, { c: 76 }, { c: 90 }],
   };
 }
 
-const LEVELS = [buildLevel1(), buildLevel2(), buildLevel3()];
+function buildLevel4() {
+  const cols = 82;
+  const grid = makeGrid(cols);
+
+  // única franja de suelo real al inicio y al final: todo lo demás es
+  // vacío con lava al fondo — el nivel entero se cruza saltando de
+  // plataforma en plataforma, sin ninguna red de suelo continuo.
+  ground(grid, 0, 4);
+  ground(grid, 76, cols - 1);
+  lavaFloor(grid, 5, 75);
+
+  // tres islas pequeñas y macizas: puntos de control seguros para respirar
+  plateau(grid, 20, 21, ROWS - 3);
+  plateau(grid, 45, 46, ROWS - 3);
+  plateau(grid, 63, 64, ROWS - 3);
+  checkpointAt(grid, 20, ROWS - 4);
+  checkpointAt(grid, 45, ROWS - 4);
+  checkpointAt(grid, 63, ROWS - 4);
+
+  // piedras sueltas (plataformas de una sola casilla, sin nada debajo):
+  // la columna vertebral del nivel, plataformeo puro sobre el vacío
+  stones(grid, [
+    [7, ROWS - 3], [9, ROWS - 2], [11, ROWS - 4], [13, ROWS - 3],
+    [24, ROWS - 3], [26, ROWS - 4], [28, ROWS - 2], [30, ROWS - 3], [33, ROWS - 2],
+    [49, ROWS - 3], [51, ROWS - 4], [53, ROWS - 2], [61, ROWS - 3],
+    [67, ROWS - 3], [69, ROWS - 2], [71, ROWS - 3], [73, ROWS - 4],
+  ]);
+
+  // monedas de riesgo/recompensa, una casilla encima de algunas piedras
+  [[9, ROWS - 3], [28, ROWS - 3], [53, ROWS - 3], [69, ROWS - 3]].forEach(([c, r]) => coinAt(grid, c, r));
+
+  flagAt(grid, cols - 3, ROWS - 3);
+
+  const platforms = [
+    makePlatform({ axis: "x", min: 16 * TILE, max: 18 * TILE, fixed: (ROWS - 3) * TILE, w: 2 * TILE, h: 20, speed: 100 }),
+    makePlatform({ axis: "x", min: 36 * TILE, max: 39 * TILE, fixed: (ROWS - 4) * TILE, w: 2 * TILE, h: 20, speed: 115 }),
+    makePlatform({ axis: "x", min: 56 * TILE, max: 58 * TILE, fixed: (ROWS - 5) * TILE, w: 2 * TILE, h: 20, speed: 130 }),
+  ];
+  const enemies = []; // sin slimes: aquí el reto son las sierras y la precisión de los saltos
+  const saws = [
+    makePlatform({ axis: "y", min: 2 * TILE, max: 6 * TILE, fixed: 31.5 * TILE, w: 44, h: 44, speed: 150 }),
+    makePlatform({ axis: "y", min: 2 * TILE, max: 6 * TILE, fixed: 62 * TILE, w: 44, h: 44, speed: 160 }),
+    makePlatform({ axis: "x", min: 68 * TILE, max: 72 * TILE, fixed: (ROWS - 6) * TILE, w: 44, h: 44, speed: 150 }),
+  ];
+
+  return {
+    id: 4,
+    name: "Cielo Roto",
+    timeLimit: 75,
+    tip: "El nivel final: casi no hay suelo, solo plataformas sobre el vacío. Tres islas con punto de control para respirar entre tramos. ¡No hay red de seguridad, mucha suerte!",
+    background: "bg_desert",
+    cols, grid,
+    spawn1: { c: 1 }, spawn2: { c: 2 },
+    platforms, enemies, saws, checkpoints: [{ c: 20 }, { c: 45 }, { c: 63 }],
+  };
+}
+
+const LEVELS = [buildLevel1(), buildLevel2(), buildLevel3(), buildLevel4()];
 
 // ---------------------------------------------------------------------
 // 6) ESTADO DEL JUEGO
